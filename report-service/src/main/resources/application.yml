@@ -1,0 +1,117 @@
+server:
+  port: 8085
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  application:
+    name: order-service
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:order-db}:${DB_PORT:5432}/${DB_NAME:report_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        default_schema: public
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+  data:
+    redis:
+      host: ${REDIS_HOST:redis}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:rabbitmq}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+          initial-interval: 1000
+          max-attempts: 3
+          multiplier: 2.0
+
+# JWT
+jwt:
+  secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# Logging
+logging:
+  level:
+    com.ecommerce.order: DEBUG
+    org.springframework.amqp: INFO
+    org.hibernate.SQL: INFO
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+
+messaging:
+  exchange:
+    order: order.exchange
+    inventory: inventory.exchange
+    payment: payment.exchange
+  queue:
+    order-created: order.created.queue
+    order-created-retry: order.created.retry.queue
+    order-created-dlq: order.created.dead.queue
+    order-cancelled: order.cancelled.queue
+    order-cancelled-retry: order.cancelled.retry.queue
+    order-cancelled-dlq: order.cancelled.dead.queue
+    payment-completed: payment.completed.queue
+    payment-completed-retry: payment.completed.retry.queue
+    payment-completed-dlq: payment.completed.dead.queue
+    payment-failed: payment.failed.queue
+    payment-failed-retry: payment.failed.retry.queue
+    payment-failed-dlq: payment.failed.dead.queue
+    stock-reserved: stock.reserved.queue
+    stock-reserved-retry: stock.reserved.retry.queue
+    stock-reserved-dlq: stock.reserved.dead.queue
+    stock-reservation-failed: stock.reservation.failed.queue
+    stock-reservation-failed-retry: stock.reservation.failed.retry.queue
+    stock-reservation-failed-dlq: stock.reservation.failed.dead.queue
+  routing-key:
+    order-created: order.created
+    order-cancelled: order.cancelled
+    payment-completed: payment.completed
+    payment-failed: payment.failed
+    stock-reserved: stock.reserved
+    stock-reservation-failed: stock.reservation.failed

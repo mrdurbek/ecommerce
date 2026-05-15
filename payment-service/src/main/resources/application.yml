@@ -1,0 +1,63 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: payment-service
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:payment-db}:${DB_PORT:5432}/${DB_NAME:payment_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 10
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    listener:
+      simple:
+        acknowledge-mode: manual
+
+jwt:
+  secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+
+messaging:
+  exchange:
+    payment: payment.exchange
+    order: order.exchange
+  queue:
+    payment-completed: payment.completed.queue
+    payment-completed-retry: payment.completed.retry.queue
+    payment-completed-dlq: payment.completed.dead.queue
+    payment-failed: payment.failed.queue
+    payment-failed-retry: payment.failed.retry.queue
+    payment-failed-dlq: payment.failed.dead.queue
+  routing-key:
+    payment-completed: payment.completed
+    payment-failed: payment.failed
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  level:
+    com.ecommerce.payment: DEBUG

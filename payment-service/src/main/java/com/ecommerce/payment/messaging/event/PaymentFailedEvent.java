@@ -1,0 +1,27 @@
+package com.ecommerce.payment.messaging.event;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class PaymentFailedEvent {
+    private String eventId;
+    private String paymentRef;
+    private Long paymentId;
+    private Long orderId;
+    private String orderNumber;
+    private Long userId;
+    private BigDecimal amount;
+    private String currency;
+    private String method;
+    private String reason;
+    private LocalDateTime failedAt;
+}

@@ -1,0 +1,31 @@
+package com.ecommerce.auth.dto.request;
+
+import jakarta.validation.constraints.*;
+import lombok.Data;
+
+@Data
+public class RegisterRequest {
+
+    @NotBlank(message = "First name is required")
+    @Size(min = 2, max = 100, message = "First name must be between 2 and 100 characters")
+    private String firstName;
+
+    @NotBlank(message = "Last name is required")
+    @Size(min = 2, max = 100, message = "Last name must be between 2 and 100 characters")
+    private String lastName;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
+    private String email;
+
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, max = 100, message = "Password must be between 8 and 100 characters")
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$",
+            message = "Password must contain at least one uppercase, lowercase, digit and special character"
+    )
+    private String password;
+
+    @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Invalid phone number format")
+    private String phoneNumber;
+}
