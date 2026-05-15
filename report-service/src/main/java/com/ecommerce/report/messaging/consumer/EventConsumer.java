@@ -180,7 +180,7 @@ public class EventConsumer {
         }
     }
 
-    @RabbitListener(queues = "${messaging.queue.stock-reserved}.report")
+    @RabbitListener(queues = "${messaging.queue.stock-reserved}")
     @Transactional
     public void handleStockReserved(
             StockReservedEvent event,
@@ -218,7 +218,7 @@ public class EventConsumer {
         }
     }
 
-    @RabbitListener(queues = "${messaging.queue.stock-reservation-failed}.report")
+    @RabbitListener(queues = "${messaging.queue.stock-reservation-failed}")
     @Transactional
     public void handleStockReservationFailed(
             StockReservationFailedEvent event,

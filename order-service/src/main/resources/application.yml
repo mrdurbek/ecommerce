@@ -91,31 +91,28 @@ messaging:
     inventory: inventory.exchange
     payment: payment.exchange
   queue:
-    order-created: order.created.queue
-    order-created-retry: order.created.retry.queue
-    order-created-dlq: order.created.dead.queue
-    order-cancelled: order.cancelled.queue
-    order-cancelled-retry: order.cancelled.retry.queue
-    order-cancelled-dlq: order.cancelled.dead.queue
-    stock-reserved: stock.reserved.queue
-    stock-reserved-retry: stock.reserved.retry.queue
-    stock-reserved-dlq: stock.reserved.dead.queue
-    stock-reservation-failed: stock.reservation.failed.queue
-    stock-reservation-failed-retry: stock.reservation.failed.retry.queue
-    stock-reservation-failed-dlq: stock.reservation.failed.dead.queue
-    payment-completed: payment.completed.queue
-    payment-completed-retry: payment.completed.retry.queue
-    payment-completed-dlq: payment.completed.dead.queue
-    payment-failed: payment.failed.queue
-    payment-failed-retry: payment.failed.retry.queue
-    payment-failed-dlq: payment.failed.dead.queue
+    order-created: order.created.order.queue
+    order-created-retry: order.created.order.retry.queue
+    order-created-dlq: order.created.order.dead.queue
+    order-cancelled: order.cancelled.order.queue
+    order-cancelled-retry: order.cancelled.order.retry.queue
+    order-cancelled-dlq: order.cancelled.order.dead.queue
+    stock-reserved: stock.reserved.order.queue
+    stock-reserved-retry: stock.reserved.order.retry.queue
+    stock-reserved-dlq: stock.reserved.order.dead.queue
+    stock-reservation-failed: stock.reservation.failed.order.queue
+    stock-reservation-failed-retry: stock.reservation.failed.order.retry.queue
+    stock-reservation-failed-dlq: stock.reservation.failed.order.dead.queue
+    payment-completed: payment.completed.order.queue
+    payment-completed-retry: payment.completed.order.retry.queue
+    payment-completed-dlq: payment.completed.order.dead.queue
+    payment-failed: payment.failed.order.queue
+    payment-failed-retry: payment.failed.order.retry.queue
+    payment-failed-dlq: payment.failed.order.dead.queue
   routing-key:
     order-created: order.created
     order-cancelled: order.cancelled
     stock-reserved: stock.reserved
     payment-completed: payment.completed
     payment-failed: payment.failed
-    stock-reserved-dlq: stock.reserved.dead.queue
-    stock-reservation-failed-retry: stock.reservation.failed.retry.queue
-    stock-reservation-failed-dlq: stock.reservation.failed.dead.queue
     stock-reservation-failed: stock.reservation.failed

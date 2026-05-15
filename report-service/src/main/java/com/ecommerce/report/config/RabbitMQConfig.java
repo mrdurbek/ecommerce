@@ -106,6 +106,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public TopicExchange orderDeadLetterExchange() {
+        return ExchangeBuilder.topicExchange(orderExchange + ".dlx").durable(true).build();
+    }
+
+    @Bean
     public TopicExchange paymentExchange() {
         return ExchangeBuilder.topicExchange(paymentExchange).durable(true).build();
     }
@@ -116,6 +121,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public TopicExchange paymentDeadLetterExchange() {
+        return ExchangeBuilder.topicExchange(paymentExchange + ".dlx").durable(true).build();
+    }
+
+    @Bean
     public TopicExchange inventoryExchange() {
         return ExchangeBuilder.topicExchange(inventoryExchange).durable(true).build();
     }
@@ -123,6 +133,11 @@ public class RabbitMQConfig {
     @Bean
     public TopicExchange inventoryRetryExchange() {
         return ExchangeBuilder.topicExchange(inventoryExchange + ".retry").durable(true).build();
+    }
+
+    @Bean
+    public TopicExchange inventoryDeadLetterExchange() {
+        return ExchangeBuilder.topicExchange(inventoryExchange + ".dlx").durable(true).build();
     }
 
     //Queues
@@ -188,14 +203,14 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue paymentcompeletdDlqQueue() {
+    public Queue paymentCompletedDlqQueue() {
         return QueueBuilder.durable(paymentCompletedDeadQueue).build();
     }
 
     @Bean
     public Queue paymentFailedQueue() {
         return QueueBuilder.durable(paymentFailedQueue)
-                .withArgument("x-dead-letter-exchange", paymentFailedQueue + ".retry")
+                .withArgument("x-dead-letter-exchange", paymentExchange + ".retry")
                 .withArgument("x-dead-letter-routing-key", paymentFailedKey + ".retry")
                 .build();
     }
@@ -210,7 +225,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue paymentFailedFailedDlqQueue() {
+    public Queue paymentFailedDlqQueue() {
         return QueueBuilder.durable(paymentFailedDeadQueue).build();
     }
 
@@ -240,7 +255,7 @@ public class RabbitMQConfig {
     public Queue stockReservationFailedQueue() {
         return QueueBuilder.durable(stockReservationFailedQueue)
                 .withArgument("x-dead-letter-exchange", inventoryExchange + ".retry")
-                .withArgument("x-dead-letter-routing-key", stockReservationFailedKey + "retry")
+                .withArgument("x-dead-letter-routing-key", stockReservationFailedKey + ".retry")
                 .build();
     }
 
@@ -286,7 +301,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding paymentCompletedRetryBinding() {
-        return BindingBuilder.bind(paymentCompletedRetryQueue()).to(paymentExchange()).with(paymentCompletedKey + ".retry");
+        return BindingBuilder.bind(paymentCompletedRetryQueue()).to(paymentRetryExchange()).with(paymentCompletedKey + ".retry");
     }
 
     @Bean
@@ -295,7 +310,7 @@ public class RabbitMQConfig {
     }
     @Bean
     public Binding paymentFailedRetryBinding() {
-        return BindingBuilder.bind(paymentFailedRetryQueue()).to(paymentExchange()).with(paymentFailedKey + ".retry");
+        return BindingBuilder.bind(paymentFailedRetryQueue()).to(paymentRetryExchange()).with(paymentFailedKey + ".retry");
     }
 
     @Bean
@@ -305,7 +320,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding stockReservedRetryBinding() {
-        return BindingBuilder.bind(stockReservedRetryQueue()).to(inventoryExchange()).with(stockReservedKey + ".retry");
+        return BindingBuilder.bind(stockReservedRetryQueue()).to(inventoryRetryExchange()).with(stockReservedKey + ".retry");
     }
 
     @Bean
@@ -315,7 +330,49 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding stockReservationFailedRetryBinding() {
-        return BindingBuilder.bind(stockReservationFailedRetryQueue()).to(inventoryExchange()).with(stockReservationFailedKey + "retry");
+        return BindingBuilder.bind(stockReservationFailedRetryQueue()).to(inventoryRetryExchange()).with(stockReservationFailedKey + ".retry");
+    }
+
+    @Bean
+    public Binding orderCreatedDlqBinding() {
+        return BindingBuilder.bind(orderCreatedDlqQueue())
+                .to(orderDeadLetterExchange())
+                .with(orderCreatedKey + ".dead");
+    }
+
+    @Bean
+    public Binding orderCancelledDlqBinding() {
+        return BindingBuilder.bind(orderCancelledDlqQueue())
+                .to(orderDeadLetterExchange())
+                .with(orderCancelledKey + ".dead");
+    }
+
+    @Bean
+    public Binding paymentCompletedDlqBinding() {
+        return BindingBuilder.bind(paymentCompletedDlqQueue())
+                .to(paymentDeadLetterExchange())
+                .with(paymentCompletedKey + ".dead");
+    }
+
+    @Bean
+    public Binding paymentFailedDlqBinding() {
+        return BindingBuilder.bind(paymentFailedDlqQueue())
+                .to(paymentDeadLetterExchange())
+                .with(paymentFailedKey + ".dead");
+    }
+
+    @Bean
+    public Binding stockReservedDlqBinding() {
+        return BindingBuilder.bind(stockReservedDlqQueue())
+                .to(inventoryDeadLetterExchange())
+                .with(stockReservedKey + ".dead");
+    }
+
+    @Bean
+    public Binding stockReservationFailedDlqBinding() {
+        return BindingBuilder.bind(stockReservationFailedDlqQueue())
+                .to(inventoryDeadLetterExchange())
+                .with(stockReservationFailedKey + ".dead");
     }
 
     @Bean

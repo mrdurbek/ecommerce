@@ -93,22 +93,20 @@ messaging:
     order: order.exchange
     inventory: inventory.exchange
   queue:
-    order-created: order.created.queue
-    order-created-retry: order.created.retry.queue
-    order-created-dlq: order.created.dead.queue
-    order-cancelled: order.cancelled.queue
-    order-cancelled-retry: order.cancelled.retry.queue
-    order-cancelled-dlq: order.cancelled.dead.queue
-    stock-reserved: stock.reserved.queue
-    stock-reserved-retry: stock.reserved.retry.queue
-    stock-reserved-dlq: stock.reserved.dead.queue
-    stock-reservation-failed: stock.reservation.failed.queue
-    stock-reservation-failed-retry: stock.reservation.failed.retry.queue
-    stock-reservation-failed-dlq: stock.reservation.failed.dead.queue
+    order-created: order.created.inventory.queue
+    order-created-retry: order.created.inventory.retry.queue
+    order-created-dlq: order.created.inventory.dead.queue
+    order-cancelled: order.cancelled.inventory.queue
+    order-cancelled-retry: order.cancelled.inventory.retry.queue
+    order-cancelled-dlq: order.cancelled.inventory.dead.queue
+    stock-reserved: stock.reserved.inventory.queue
+    stock-reserved-retry: stock.reserved.inventory.retry.queue
+    stock-reserved-dlq: stock.reserved.inventory.dead.queue
+    stock-reservation-failed: stock.reservation.failed.inventory.queue
+    stock-reservation-failed-retry: stock.reservation.failed.inventory.retry.queue
+    stock-reservation-failed-dlq: stock.reservation.failed.inventory.dead.queue
   routing-key:
     order-created: order.created
     order-cancelled: order.cancelled
     stock-reserved: stock.reserved
     stock-reservation-failed: stock.reservation.failed
-    stock-reservation-failed-retry: stock.reservation.failed.retry.queue
-    stock-reservation-failed-dlq: stock.reservation.failed.dead.queue

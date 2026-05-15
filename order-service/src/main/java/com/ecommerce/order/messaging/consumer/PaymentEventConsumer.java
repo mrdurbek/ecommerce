@@ -115,14 +115,16 @@ public class PaymentEventConsumer {
         if (xDeath == null || xDeath.isEmpty()) {
             return 0;
         }
-        Map<String, Object> death = xDeath.get(0);
-        Long count = (Long) death.get("count");
-        return count != null ? count.intValue() : 0;
+        Object countObject = xDeath.get(0).get("count");
+        if (countObject instanceof Number number) {
+            return number.intValue();
+        }
+        return 0;
     }
 
     private void sendToDeadLetter(String routingKey, Object event) {
         try {
-            rabbitTemplate.convertAndSend(paymentExchange, routingKey, event);
+            rabbitTemplate.convertAndSend(paymentExchange + ".dlx", routingKey, event);
         } catch (Exception e) {
             log.error("Failed to send event to dead letter queue: {}", routingKey, e);
         }

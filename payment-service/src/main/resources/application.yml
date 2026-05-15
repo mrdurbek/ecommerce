@@ -42,12 +42,12 @@ messaging:
     payment: payment.exchange
     order: order.exchange
   queue:
-    payment-completed: payment.completed.queue
-    payment-completed-retry: payment.completed.retry.queue
-    payment-completed-dlq: payment.completed.dead.queue
-    payment-failed: payment.failed.queue
-    payment-failed-retry: payment.failed.retry.queue
-    payment-failed-dlq: payment.failed.dead.queue
+    payment-completed: payment.completed.payment.queue
+    payment-completed-retry: payment.completed.payment.retry.queue
+    payment-completed-dlq: payment.completed.payment.dead.queue
+    payment-failed: payment.failed.payment.queue
+    payment-failed-retry: payment.failed.payment.retry.queue
+    payment-failed-dlq: payment.failed.payment.dead.queue
   routing-key:
     payment-completed: payment.completed
     payment-failed: payment.failed
